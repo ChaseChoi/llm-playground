@@ -41,5 +41,18 @@ with open("the-verdict.txt", "r", encoding="utf8") as f:
     
 data_loader = create_dataloader_v1(raw_text, batch_size=4, max_length=4, stride=4, shuffle=False)
 data_iterator = iter(data_loader)
-first_batch = next(data_iterator)
-print(first_batch)
+inputs, targets = next(data_iterator)
+
+
+context_length = 4
+output_dim = 128
+vocab_size = 50257
+token_embedding_layer = torch.nn.Embedding(vocab_size, output_dim)
+token_embeddings = token_embedding_layer(inputs)
+
+pos_embedding_layer = torch.nn.Embedding(context_length, output_dim)
+pos_embedding = pos_embedding_layer(torch.arange(context_length))
+
+
+input_embedding = token_embeddings + pos_embedding
+print(input_embedding.shape)
